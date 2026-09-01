@@ -1,0 +1,12 @@
+.DS_Store
+*.o
+*.out
+a.out
+build/
+cmake-build-*/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+*.log
+perf.data*
