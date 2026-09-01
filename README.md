@@ -5,17 +5,68 @@
 
 ---
 
-## 1. The whole thing in 30 seconds
+## 1. The simple version — start here
 
-```
-1. Open a new chat. Attach AGENT.md + PLAN.md + today's topic file.
-2. Type: START SESSION
-3. Work the block for today (PLAN.md §3).
-4. Run ./learning/new-day.sh, fill in the template.
-5. git add -A && git commit -m "day N: <topic>"
+### Every study day, do these 4 things:
+
+**1. Open a new AI chat.** Drag in two or three files:
+   - `AGENT.md` (always)
+   - `PLAN.md` (always)
+   - today's lesson file (see the day table below)
+
+**2. Type:** `START SESSION`
+
+**3. Do what it tells you.** Set a timer. Roughly: 15 min re-solving old problems, 5 min quiz, 90 min on today's thing.
+
+**4. Finish up.** In your terminal:
+```bash
+./learning/new-day.sh          # adds today's form to progress.md
+# fill in the blanks — 2 minutes, ugly is fine
+git add -A && git commit -m "day 1"
 ```
 
-That's it. Five months of that.
+That's the whole system. Repeat five months.
+
+### Which day is which
+
+| Day | What you do |
+|---|---|
+| **Mon** | DSA lesson (read + code it yourself) |
+| **Tue** | DSA project from `PATTERN-PROJECTS.md` |
+| **Wed** | System design lesson |
+| **Thu** | LeetCode problems |
+| **Fri** | System design project |
+| **Sat** | 4 hours: Track C + finish the project + review |
+| **Sun** | **Off.** Do nothing. |
+
+### Your first two weeks, spelled out
+
+No decisions to make. Just open the file listed.
+
+**This week (Sprint 0) — setup only, no lessons:**
+
+| Day | Do this |
+|---|---|
+| Tue | Read `AI-PLAYBOOK.md` end to end. 20 min. Nothing else. |
+| Wed | **Baseline test.** LeetCode 1, 217, 20. Timer on, no help, no Google. *Before each one* write in `learning/calibration.md`: which pattern you think it is, confidence 1–5, minutes you think it'll take. After each, fill in what actually happened. |
+| Thu | Open `TRACK-C-CRAFT.md`, score yourself 1–5 on the 12 baseline lines. Nobody sees it. |
+| Fri | Copy the contract in `learning/progress.md` and sign it. Commit. |
+| Sat | Check your tools work: `gdb` or `lldb`, a profiler, `psql`. |
+| Sun | Off. |
+
+**Next week (Sprint 1 begins):**
+
+| Day | Open this file |
+|---|---|
+| Mon 7 Sep | `DSA/DSA-leetcode/week-0-orientation/0.1-what-is-dsa-and-algorithms.md` |
+| Tue 8 Sep | `PATTERN-PROJECTS.md` → "0.4 The Growth Lab" — build it |
+| Wed 9 Sep | `System-design/week-0-orientation/0.1-what-is-system-design.md` |
+| Thu 10 Sep | LeetCode 26 and 27. Micro loop: predict → attempt → log. |
+| Fri 11 Sep | `System-design/week-0-orientation/0.2-how-to-approach-a-design-interview.md` |
+| Sat 12 Sep | `TRACK-C-CRAFT.md` Theme 1 (Testing) + finish Growth Lab + review queue |
+| Sun 13 Sep | Off |
+
+After that, `PLAN.md` §4 tells you which week-folder you're in. Work through its files in number order.
 
 ---
 
