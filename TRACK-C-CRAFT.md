@@ -46,6 +46,8 @@ That last line is the real target of this whole plan. Confidence is not knowing 
 
 **Ties to:** DSA edge-case tag E4. Your pre-submit checklist (empty / size 1 / all-same / negatives / max / overflow) *is* a test suite.
 
+**Fallback (if your job doesn't fit):** Pick a small OSS library (e.g. `stb_image.h`, Go's `encoding/json`) and write property-based tests for its public API using `fast-check` (TS) or `hypothesis` (Python). Find at least one input that triggers an edge case the maintainers missed — file an issue with your test as a reproducer.
+
 ---
 
 ## Theme 2 · Debugging under pressure — Sprint 2
@@ -60,7 +62,7 @@ That last line is the real target of this whole plan. Confidence is not knowing 
 | `git bisect` — binary search over history | Automate it: `git bisect run ./test.sh` |
 | Debugging what you can't reproduce: logs, core dumps, `strace`/`dtruss`, tcpdump | Trace a syscall path on something you wrote |
 
-**Deliverable:** write up your last three production bugs. For each: symptom → hypothesis chain → root cause → **the general rule you now hold**. Same format as `mistake-log.md`. You will find they share a root cause, and that is worth more than any of the three fixes.
+**Deliverable:** write up your last three production bugs. For each: symptom → hypothesis chain → root cause → **the general rule you now hold**. Same format as the "Mistakes & General Rules" section of a topic note. You will find they share a root cause, and that is worth more than any of the three fixes.
 
 **Ties to:** DSA 3.4 binary search. `git bisect` is binary search over commits; the debugger's "is the bug before or after this line" is binary search over execution.
 
@@ -186,7 +188,7 @@ That last line is the real target of this whole plan. Confidence is not knowing 
 | Reviewing your own diff before requesting review | Read your own PR as if you hated the author |
 | Receiving review without defensiveness — the comment is about the code | Ask for review on something you're unsure about, on purpose |
 
-**Deliverable:** a personal review checklist, written from your own `mistake-log.md` tags. Your E4 edge-case failures become the edge-case questions you ask others. Your mistakes turn into your judgement — that is the whole trick.
+**Deliverable:** a personal review checklist, written from the error tags in your own topic notes. Your E4 edge-case failures become the edge-case questions you ask others. Your mistakes turn into your judgement — that is the whole trick.
 
 ---
 

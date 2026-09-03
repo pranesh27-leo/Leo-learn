@@ -69,7 +69,7 @@ That last clause is the one that produces useful output. Without it you get enco
 
 **This one is genuinely superhuman and I want you to actually do it.**
 
-Once a month, paste your entire `mistake-log.md` and ask:
+Once a month, paste the "Mistakes & General Rules" sections from all your topic notes and ask:
 
 > *"Here are 40 of my logged failures. I've tagged them myself. Ignore my tags. What is the single failure mode underneath these that I cannot see because I'm inside it? Argue for it with evidence from specific entries."*
 
@@ -85,7 +85,7 @@ That last request is the payload. There is always such a sentence, and you canno
 
 ### 5. Hard primary sources become approachable
 
-You own `hello-algo_1.3.0_en_cpp.pdf`. You should also read the Dynamo paper, the Raft paper, Bigtable, Kleppmann's *DDIA*. In 2019 these were a wall.
+You own `books/hello-algo-cpp.pdf`. You should also read the Dynamo paper, the Raft paper, Bigtable, Kleppmann's *DDIA*. In 2019 these were a wall.
 
 The right prompt is **not** "summarise this". A summary transfers nothing.
 

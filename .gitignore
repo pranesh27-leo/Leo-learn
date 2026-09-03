@@ -10,3 +10,9 @@ __pycache__/
 .venv/
 *.log
 perf.data*
+
+# lp.sh scratch
+db.json.tmp
+
+# local editor/agent settings
+.claude/

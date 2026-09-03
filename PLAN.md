@@ -16,12 +16,12 @@ Four kinds of evidence actually move the needle. Every one of them is a thing yo
 
 | Evidence | Where it comes from | File |
 |---|---|---|
-| "My prediction about myself was accurate" | Predicting time + confidence before every problem, then checking | `learning/calibration.md` |
+| "My prediction about myself was accurate" | Predicting time + confidence before every problem, then checking | `./lp log` → the topic note |
 | "I explained it out loud and it held up" | Teach-back, mock interviews, design defence | weekly gate |
-| "I built it and it survived contact with reality" | 47 small projects, shipped and defended | `learning/projects/` |
-| "I still had it a month later" | Cold re-solve at D+21 | `learning/review-queue.md` |
+| "I built it and it survived contact with reality" | 47 small projects, shipped and defended | `PATTERN-PROJECTS.md` |
+| "I still had it a month later" | Cold re-solve at D+21 | `./lp due` → `learning/db.json` |
 
-This is why `calibration.md` is the most important file in this repo and the one you will most want to skip. **Underconfidence is a calibration error exactly like overconfidence is.** My strong guess is that fifty rows in, you will find your predictions were consistently *pessimistic* — and at that point you will no longer be able to argue with yourself, because you'll be arguing with a table.
+This is why the prediction rows in your topic notes are the most important data in this repo and the one you will most want to skip. **Underconfidence is a calibration error exactly like overconfidence is.** My strong guess is that fifty rows in, you will find your predictions were consistently *pessimistic* — and at that point you will no longer be able to argue with yourself, because you'll be arguing with a table.
 
 So: the plan below is 60% the syllabus you already had, and 40% a machine for generating evidence about yourself.
 
@@ -33,7 +33,7 @@ So: the plan below is 60% the syllabus you already had, and 40% a machine for ge
 
 | Track | What | Where | Weekly time |
 |---|---|---|---|
-| **A — DSA** | Weeks 0–6, C++17, 27 projects, ~75 problems | `DSA/DSA-leetcode/` | ~6 h |
+| **A — DSA** | Weeks 0–6, C++17, 27 projects, ~75 problems | `DSA/` | ~6 h |
 | **B — System Design** | Weeks 0–6, 20 projects, 8 cold designs | `System-design/` | ~5 h |
 | **C — Engineering Craft** | Testing, debugging, concurrency, observability, SQL, writing, review, production | `TRACK-C-CRAFT.md` | ~1.5 h + **applied at your day job** |
 
@@ -59,7 +59,7 @@ Every weekday session opens the same way. Twenty minutes of loop, one hundred mi
 
 **The Sunday rest day is load-bearing.** A plan with no rest day breaks in week three, and you will read the break as a character flaw rather than an arithmetic one. It is arithmetic. Take the day.
 
-**Session close is mandatory** — the block in `AGENT.md` §3.2, written into `learning/progress.md`, every single session. Run `./learning/new-day.sh` and fill in the template it appends. Two minutes. If you skip the log, the plan silently becomes a reading list.
+**Session close is mandatory** — the block in `AGENT.md` §3.2, written into today's topic note, every single session. Fill in the actual half of each `Problems Solved` row and run `./lp sched` on anything you solved. Two minutes. If you skip the log, the plan silently becomes a reading list.
 
 ---
 
@@ -138,13 +138,13 @@ If 22 weeks is too long for you, the lever is not "work faster" — it is droppi
 
 | # | Change | Reason |
 |---|---|---|
-| 1 | Created `learning/` with all five artifacts + `new-day.sh` | `AGENT.md` §4 mandated them; none existed. The feedback engine was designed and never switched on. |
+| 1 | Built `learning/lp.sh` — topic notes, prediction logging, and the D+1/3/7/21 retention ladder in one tool | `AGENT.md` §4 mandated a feedback engine; it was designed and never switched on. Five hand-maintained markdown files were replaced by one command. |
 | 2 | `git init` + `.gitignore` | §8 step 1 required a repo. Your commit history becomes a second, unfakeable record of consistency. |
 | 3 | Two-week sprints instead of "7–10 days for both tracks" | The original needs ~25 h/week. You have 14. This was the single biggest reason the plan would have failed. |
 | 4 | Added **Track C** (`TRACK-C-CRAFT.md`) | Testing, debugging, concurrency, observability, SQL craft, code reading, writing, review, production. None of it was covered. This is the track that touches your actual job. |
 | 5 | Added **`AI-PLAYBOOK.md`** and an AI contract in `AGENT.md` | Your last question, and a genuine hazard: AI can complete all 47 projects in an afternoon and leave you with nothing. |
 | 6 | Explicit Sunday rest + a 2-week holiday reset | Plans without slack don't survive contact with a full-time job. |
-| 7 | Flagged the thin week-folders | DSA W4 is 131 lines for the hardest material in the course; W5 is 121. **For Sprints 4 and 5 the `.md` files are index cards, not lessons.** Primary source is `hello-algo_1.3.0_en_cpp.pdf` (you own it) plus the project. Budget an extra hour each. |
+| 7 | Filled in the thin week-folders | DSA W4 and W5 cover the hardest material in the course and were index cards, not lessons. Both are now written out in full. Still pair them with `books/hello-algo-cpp.pdf` and budget an extra hour each. |
 | 8 | Cut the problem count, kept the projects | See §6. Projects generate the evidence; problem #9 in a known pattern does not. |
 | 9 | Left the parking lot alone | MQTT, K8s, EMQX, Kafka, ZooKeeper stay deferred by your instruction. SD Week 4 (asynchronism) is their foundation; they are the natural block *after* 31 Jan, and given your stack you'll pick them up fast. |
 
@@ -156,11 +156,11 @@ Five files. One you touch daily, four are trigger-driven. If tracking takes more
 
 | File | When you write to it | Trigger |
 |---|---|---|
-| `learning/progress.md` | **Daily**, 2 min | End of every session — run `./learning/new-day.sh` |
-| `learning/calibration.md` | **Per problem**, 20 sec | One row *before* you start, one column *after* |
-| `learning/mistake-log.md` | **Per failure**, 3 min | Any wrong answer, any hint taken, any timeout |
-| `learning/pattern-cards.md` | **Per pattern**, 5 min | Once, when you first meet a pattern — in your own words |
-| `learning/review-queue.md` | **Per problem**, 20 sec | Schedule D+1 / D+3 / D+7 / D+21. Failed re-solve resets to D+1 |
+| Today's topic note | **Daily**, 2 min | End of every session — fill the blanks, commit |
+| `./lp log` | **Per problem**, 20 sec | Predict *before* you start; fill the actuals *after* |
+| "Mistakes & General Rules" in the note | **Per failure**, 3 min | Any wrong answer, any hint taken, any timeout |
+| "What This Pattern Is" in the note | **Per pattern**, 5 min | Once, when you first meet a pattern — in your own words |
+| `./lp sched` | **Per problem**, 20 sec | Schedules D+1 / D+3 / D+7 / D+21. Failed re-solve resets to D+1 |
 
 Commit at the end of every session: `git add -A && git commit -m "day N: <topic>"`. Twenty weeks from now the log itself is evidence.
 
@@ -176,7 +176,7 @@ Commit at the end of every session: `git add -A && git commit -m "day N: <topic>
 | Two review-queue skips in a row | Stop new material. Clear the queue first. This is the one hard stop. |
 | A sprint runs long | Extend it. **Never adjust reality to the plan.** The dates in §4 are a forecast, not a contract. |
 | "I'll skip the project and do more LeetCode" | No. The project is why you'll remember it in March. |
-| Feeling behind | Open `calibration.md` and read your own rows. That is what it is for. |
+| Feeling behind | Open your topic notes and read your own prediction rows. That is what they are for. |
 
 ---
 
@@ -185,9 +185,9 @@ Commit at the end of every session: `git add -A && git commit -m "day N: <topic>
 Six hours across this week, no new material. Get the machine running before you drive it.
 
 - [ ] **Tue** — Verify toolchain: `g++ --version` (C++17), git working. Read this file and `AI-PLAYBOOK.md` end to end.
-- [ ] **Wed** — **Baseline test, timed, no help, 30 min:** LC 1 (Two Sum), LC 217 (Contains Duplicate), LC 20 (Valid Parentheses). Predict pattern + confidence + minutes *before each*. Write row 1–3 of `calibration.md`. This is the number everything else is measured against — a bad baseline is a *good* baseline.
+- [ ] **Wed** — **Baseline test, timed, no help, 30 min:** LC 1 (Two Sum), LC 217 (Contains Duplicate), LC 20 (Valid Parentheses). Predict pattern + confidence + minutes *before each*. Log all three with `./lp log`. This is the number everything else is measured against — a bad baseline is a *good* baseline.
 - [ ] **Thu** — Self-assessment: score yourself 1–5 on every line in `TRACK-C-CRAFT.md` §Baseline. Be honest; nobody sees it. Pick your two weakest for Sprints 1–2.
-- [ ] **Fri** — Write the contract from `AGENT.md` §8.5 into `learning/progress.md` in your own handwriting-equivalent, and commit it.
+- [ ] **Fri** — Write the contract from `AGENT.md` §8.5 into `learning/notes/CONTRACT.md` in your own words, and commit it.
 - [ ] **Sat** — Sprint 0 Track C: set up the tooling you'll need all plan (`gdb`/`lldb`, `perf` or `dtrace`, a profiler for Go and Node, `psql` against a scratch Postgres). Verify each one actually runs. Then start Sprint 1 Monday.
 
-Then open a fresh chat with `AGENT.md` + `PLAN.md` + `DSA/DSA-leetcode/week-0-orientation/0.1-what-is-dsa-and-algorithms.md` attached, and say **START SESSION**.
+Then open a fresh chat with `AGENT.md` + `PLAN.md` + `DSA/week-0-orientation/0.1-what-is-dsa-and-algorithms.md` attached, and say **START SESSION**.
