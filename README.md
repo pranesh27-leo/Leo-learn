@@ -44,6 +44,9 @@ Then take the guided tour — it creates fake data, walks you through every comm
 bash learning/tutorial.sh
 ```
 
+A full annotated transcript of that walkthrough is in
+[`learning/TUTORIAL.md`](learning/TUTORIAL.md).
+
 Finally, read [`AI-PLAYBOOK.md`](AI-PLAYBOOK.md) end to end. Twenty minutes, once. It is the difference between
 an AI that teaches you and an AI that does your homework while you watch.
 
@@ -152,6 +155,7 @@ Leo-learn/
     ├── lp.sh               The tool
     ├── lp-help.md          Full command reference + error tags
     ├── tutorial.sh         Guided walkthrough — run this once
+    ├── TUTORIAL.md         Annotated transcript of the walkthrough
     ├── db.json             Your progress data
     ├── templates/          Note templates for new topics
     └── notes/{dsa,sd}/     Your notes, one file per topic

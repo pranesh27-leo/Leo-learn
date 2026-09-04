@@ -181,7 +181,8 @@ cmd_mark() {
     local pid="${1:?id}" res="${2:?pass|fail}"
     local stage
     stage=$(jq -r --arg id "$pid" '.problems[] | select(.id == $id) | .stage' "$DB")
-    [[ -z "$stage" ]] && { echo -e "${R}Problem $pid not found or already done.${N}"; exit 1; }
+    [[ -z "$stage" ]] && { echo -e "${R}Problem $pid not found.${N}"; exit 1; }
+    [[ "$stage" == "done" ]] && { echo -e "${Y}Problem $pid already complete — nothing to mark.${N}"; exit 0; }
 
     if [[ "$res" == "pass" ]]; then
         local next done_flag
@@ -190,6 +191,7 @@ cmd_mark() {
             d3)  next="d7";  done_flag=false ;;
             d7)  next="d21"; done_flag=false ;;
             d21) next="done"; done_flag=true ;;
+            *)   echo -e "${R}Unknown stage '$stage' for problem $pid.${N}"; exit 1 ;;
         esac
 
         jq --arg id "$pid" --arg ns "$next" --argjson dn "$done_flag" '
