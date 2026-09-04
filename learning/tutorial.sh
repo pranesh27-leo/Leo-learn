@@ -12,28 +12,41 @@ WF="$SCRIPT_DIR/lp.sh"
 R='\033[0;31m'; G='\033[0;32m'; Y='\033[1;33m'; C='\033[0;36m'; B='\033[1m'; N='\033[0m'
 UL='\033[4m'
 
+DEMO_DSA="$SCRIPT_DIR/notes/dsa/hash-table-two-sum.md"
+DEMO_SD="$SCRIPT_DIR/notes/sd/dns-basics.md"
+DB="$SCRIPT_DIR/db.json"
+DB_BAK="$SCRIPT_DIR/db.json.tutorial-backup"
+
+# Refuse to run if the demo topic names collide with real notes — the tutorial
+# overwrites and then deletes them, which would destroy real work.
+for f in "$DEMO_DSA" "$DEMO_SD"; do
+    if [[ -e "$f" ]]; then
+        echo "Refusing to run: $f already exists." >&2
+        echo "The tutorial overwrites and then deletes its demo notes." >&2
+        echo "Move or rename that file first." >&2
+        exit 1
+    fi
+done
+
 CLEANED=false
 
 cleanup() {
     if $CLEANED; then return; fi
     CLEANED=true
-    rm -f "$SCRIPT_DIR/notes/dsa/hash-table-two-sum.md"
-    rm -f "$SCRIPT_DIR/notes/sd/dns-basics.md"
-    if [[ -f "$SCRIPT_DIR/db.json" ]]; then
-        local full_key_dsa="$SCRIPT_DIR/notes/dsa/hash-table-two-sum.md"
-        local full_key_sd="$SCRIPT_DIR/notes/sd/dns-basics.md"
-        jq --arg kd "$full_key_dsa" --arg ks "$full_key_sd" \
-           'del(.topics[$kd]) | del(.topics[$ks]) |
-            .problems = [.problems[] | select(.topic != "hash-table-two-sum" and .topic != "dns-basics")]' \
-           "$SCRIPT_DIR/db.json" > "$SCRIPT_DIR/db.json.tmp" 2>/dev/null \
-           && mv "$SCRIPT_DIR/db.json.tmp" "$SCRIPT_DIR/db.json" || true
+    rm -f "$DEMO_DSA" "$DEMO_SD"
+    # Restore db.json wholesale: the tutorial mutates real rows (mark), so
+    # deleting only the demo rows is not enough to undo it.
+    if [[ -f "$DB_BAK" ]]; then
+        mv "$DB_BAK" "$DB"
     fi
 }
 trap cleanup EXIT
 
+[[ -f "$DB" ]] && cp "$DB" "$DB_BAK"
+
 sep() { echo ""; echo -e "${C}───────────────────────────────────────────────────${N}"; echo ""; }
 step() { echo ""; echo -e "${B}${UL}STEP $1: $2${N}"; echo ""; }
-pause() { echo ""; echo -e "${Y}>>> Press Enter to continue${N}"; read -r _; }
+pause() { echo ""; echo -e "${Y}>>> Press Enter to continue${N}"; read -r _ || true; }
 
 # ============================================================
 echo -e "${B}${C}
@@ -59,7 +72,7 @@ pause
 # ============================================================
 step 1 "Create Your First Topic Note"
 
-echo "Imagine you just finished reading about ${B}Hash Tables${N} and built"
+echo -e "Imagine you just finished reading about ${B}Hash Tables${N} and built"
 echo "the mini-project. First, create a tracking note:"
 echo ""
 echo -e "  ${C}lp init dsa \"hash-table-two-sum\"${N}"
@@ -218,7 +231,7 @@ pause
 # ============================================================
 step 3 "Log a Problem (Predict BEFORE Solving)"
 
-echo "Ready to solve LC 1 Two Sum. ${B}Predict first${N}:"
+echo -e "Ready to solve LC 1 Two Sum. ${B}Predict first${N}:"
 echo ""
 echo -e "${Y}This is the most important step. Predicting before solving${N}"
 echo -e "${Y}builds calibration - the evidence that fixes low confidence.${N}"
@@ -236,20 +249,23 @@ echo ""
 echo -e "  ${G}Logged. Go solve it...${N}"
 echo ""
 
-# Simulate by appending a row to the Problems table
-{
-    head -n -0 "$SCRIPT_DIR/notes/dsa/hash-table-two-sum.md"
-} > /dev/null  # placeholder for safety
-
-sed -i '/|---|---|---|---|---|---|---|---|/a\| LC 1 Two Sum | hash map | 10 | 4 | 15 | yes | yes | - |' \
-    "$SCRIPT_DIR/notes/dsa/hash-table-two-sum.md"
+# Simulate by appending a row to the Problems table.
+# awk, not `sed -i` — BSD sed needs a backup-suffix argument and rejects `a\text`.
+awk '
+    /^\|---\|---\|---\|---\|---\|---\|---\|---\|/ {
+        print
+        print "| LC 1 Two Sum | hash map | 10 | 4 | 15 | yes | yes | - |"
+        next
+    }
+    { print }
+' "$DEMO_DSA" > "$DEMO_DSA.tmp" && mv "$DEMO_DSA.tmp" "$DEMO_DSA"
 
 echo "After solving (took 15 min, solved correctly, no help):"
-echo "You ${B}edit the row yourself${N} with actuals:"
+echo -e "You ${B}edit the row yourself${N} with actuals:"
 echo ""
 echo "  | LC 1 Two Sum | hash map | 10 | 4 | 15 | yes | yes | - |"
 echo ""
-echo "Predicted 10 min, actual 15. You now have ${Y}evidence${N} that you"
+echo -e "Predicted 10 min, actual 15. You now have ${Y}evidence${N} that you"
 echo "slightly underestimate time. That data accumulates and becomes useful."
 echo ""
 pause
@@ -264,16 +280,19 @@ echo ""
 
 bash "$WF" sched dsa "hash-table-two-sum" "LC 1 Two Sum"
 
+# The id lp assigned to the demo row — never assume it is 1.
+DEMO_ID=$(jq -r '[.problems[] | select(.topic == "hash-table-two-sum")] | last | .id' "$DB")
+
 echo ""
 echo "The problem will come back on those 4 dates."
-echo "Each time you re-solve from a ${B}blank file${N}."
+echo -e "Each time you re-solve from a ${B}blank file${N}."
 echo ""
 pause
 
 # ============================================================
 step 5 "Each Morning: Check What's Due"
 
-echo "Each session starts with ${B}lp due${N}:"
+echo -e "Each session starts with ${B}lp due${N}:"
 echo ""
 echo -e "  ${C}lp due${N}"
 echo ""
@@ -284,7 +303,7 @@ echo ""
 echo -e "${Y}Nothing due today${N} (D+1 is tomorrow). Here's what tomorrow looks like:"
 echo ""
 echo -e "  ${B}Retention Due Today (tomorrow):${N}"
-echo "    1  [d1]  dsa  hash-table-two-sum  LC 1 Two Sum"
+echo "    $DEMO_ID  [d1]  dsa  hash-table-two-sum  LC 1 Two Sum"
 echo ""
 echo -e "  ${Y}Solve from blank file, then: lp mark <id> <pass|fail>${N}"
 echo ""
@@ -295,21 +314,21 @@ step 6 "Mark a Retention Result"
 
 echo "You re-solve LC 1 from a blank file. Got it right. Record it:"
 echo ""
-echo -e "  ${C}lp mark 1 pass${N}"
+echo -e "  ${C}lp mark $DEMO_ID pass${N}"
 echo ""
 
-bash "$WF" mark 1 pass
+bash "$WF" mark "$DEMO_ID" pass
 
 echo ""
 echo "Advanced from D+1 → D+3. Comes back in 2 days."
 echo ""
-echo "If you had ${B}failed${N}:"
+echo -e "If you had ${B}failed${N}:"
 echo ""
-echo -e "  ${R}lp mark 1 fail${N}"
+echo -e "  ${R}lp mark $DEMO_ID fail${N}"
 echo ""
-echo -e "  ${R}Result: 1 failed (d1). Reset to D+1, due tomorrow${N}"
+echo -e "  ${R}✗ $DEMO_ID failed (d1). Reset to D+1, due: <tomorrow>${N}"
 echo ""
-echo "A failure ${B}resets the entire clock${N}. No partial credit."
+echo -e "A failure ${B}resets the entire clock${N}. No partial credit."
 echo ""
 pause
 
@@ -321,17 +340,17 @@ echo ""
 echo -e "  ${C}lp exam dsa hash-table-two-sum${N}"
 echo ""
 echo "This prints a prompt you paste into your AI. The AI:"
-echo "  1. Asks 5 questions ${B}one at a time${N}"
+echo -e "  1. Asks 5 questions ${B}one at a time${N}"
 echo "  2. Progresses: basic → mechanism → trade-off → edge case → scenario"
 echo "  3. Rates each answer 1-5"
 echo "  4. Gives final score + weak areas + review items"
 echo "  5. Says 'redo this topic' if you fail 2+ questions"
 echo ""
 echo "After the exam, paste results into the note's"
-echo "${B}AI Examiner Results${N} section."
+echo -e "${B}AI Examiner Results${N} section."
 echo ""
 echo -e "${Y}See the exam prompt? (y/n): ${N}"
-read -r show_exam
+read -r show_exam || show_exam="n"
 if [[ "$show_exam" == "y" || "$show_exam" == "Y" ]]; then
     echo ""
     bash "$WF" exam dsa "hash-table-two-sum"
@@ -366,10 +385,6 @@ bash "$WF" status
 sep
 
 # ============================================================
-# Final summary - use a file to avoid heredoc interpretation issues
-cat <<'SUMMARY'
-SUMMARY
-
 # Write the final message to avoid shell interpretation of angle brackets
 cat <<'ENDMSG'
  ╔══════════════════════════════════════════════════════╗
